@@ -1,0 +1,20 @@
+# Global default owner for all files
+
+- @swayam03275
+
+# Frontend
+
+/client/ @swayam03275
+
+# Backend
+
+/server/ @swayam03275
+
+# AI/ML
+
+/ai-ml/ @swayam03275
+
+# Docs and templates
+
+/docs/ @swayam03275
+/.github/ @swayam03275

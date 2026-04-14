@@ -3,6 +3,7 @@
 SkillSphere AI is an AI-powered full-stack platform that connects **learning**, **skill evaluation**, and **career readiness** in one ecosystem.
 
 It helps:
+
 - **Students** learn, practice, and become job-ready
 - **Tutors** run live, interactive classes
 - **Recruiters** discover skilled and better-matched candidates
@@ -14,6 +15,7 @@ The platform combines live classroom experiences with AI/ML-driven career tools 
 ## Project Vision
 
 SkillSphere AI aims to simplify the path from learning to hiring by giving users practical, actionable insights at every stage:
+
 - Learn skills in real-time
 - Measure progress through dashboards
 - Improve career assets (resume and interview performance)
@@ -42,26 +44,26 @@ SkillSphere AI aims to simplify the path from learning to hiring by giving users
 
 ## Target Users
 
-- **Students**: build skills, improve resumes, and prepare for jobs  
-- **Tutors**: teach and manage live learning experiences  
+- **Students**: build skills, improve resumes, and prepare for jobs
+- **Tutors**: teach and manage live learning experiences
 - **Recruiters**: identify skilled candidates more efficiently
 
 ---
 
 ## Project Goals
 
-- Simplify the journey from learning to getting hired  
-- Provide AI-powered guidance for career growth  
-- Enable meaningful collaboration between learners and educators  
+- Simplify the journey from learning to getting hired
+- Provide AI-powered guidance for career growth
+- Enable meaningful collaboration between learners and educators
 - Keep the platform modular, scalable, and open-source friendly
 
 ---
 
 ## Tech Stack
 
-- **Frontend:** React.js  
-- **Backend:** Node.js + Express.js  
-- **Database:** MongoDB  
+- **Frontend:** React.js
+- **Backend:** Node.js + Express.js
+- **Database:** MongoDB
 - **Intelligence Layer:** AI/ML for resume analysis, matching, and recommendations
 
 ---
@@ -121,9 +123,9 @@ SkillSphere-AI/
 
 ### Why this structure works
 
-- **Feature-first design:** Easier to assign and scale work across teams  
-- **Clear boundaries:** Frontend, backend, and AI/ML concerns are separated  
-- **Contributor-friendly:** New developers can quickly find where to work  
+- **Feature-first design:** Easier to assign and scale work across teams
+- **Clear boundaries:** Frontend, backend, and AI/ML concerns are separated
+- **Contributor-friendly:** New developers can quickly find where to work
 - **Future-ready:** Supports adding new learning/career modules without major rewrites
 
 ---
@@ -131,6 +133,7 @@ SkillSphere-AI/
 ## For Open-Source Contributors
 
 If you want to contribute, start by understanding:
+
 1. Which user group your change helps (student, tutor, recruiter)
 2. Which module it belongs to (classrooms, resumes, matching, interviews, dashboard)
 3. Whether the change impacts frontend, backend, AI/ML, or multiple layers
@@ -147,6 +150,15 @@ This approach keeps contributions focused, reviewable, and scalable.
 - PR Template: `.github/PULL_REQUEST_TEMPLATE.md`
 - Issue Templates: `.github/ISSUE_TEMPLATE/`
 - Detailed Structure Notes: `docs/PROJECT_STRUCTURE.md`
+- PR Quality Gates: `docs/QUALITY_GATES.md`
+
+## PR Checks and Code Review Safety
+
+Automated checks run on pull requests to `main` through:
+
+- `.github/workflows/pr-quality-checks.yml`
+
+These checks validate docs/workflows and, once app code is added, automatically run lint/test/build for `client`, `server`, and `ai-ml` when their dependency manifests exist.
 
 ## Current Repository Status
 
