@@ -65,14 +65,14 @@ const AnalysisResult = ({ result, file, onReset }) => {
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left Column: Suggestions & Keywords */}
-        <div className="lg:col-span-7 space-y-6">
+        <div className="lg:col-span-7 space-y-6 flex flex-col">
           {/* Suggestions Section */}
-          <div className="bg-dark-bg/40 border border-gray-700/50 rounded-2xl p-6 h-full flex flex-col">
+          <div className="bg-dark-bg/40 border border-gray-700/50 rounded-2xl p-6 shadow-lg flex-1">
             <div className="flex items-center gap-2 mb-6">
               <CheckCircle2 className="w-5 h-5 text-primary" />
               <h3 className="text-lg font-semibold text-gray-200">Key Suggestions</h3>
             </div>
-            <ul className="space-y-4 flex-1">
+            <ul className="space-y-4">
               {suggestions.map((suggestion, index) => (
                 <li key={index} className="flex items-start gap-3 group">
                   <div className="mt-1 bg-primary/10 border border-primary/20 rounded p-0.5 group-hover:bg-primary/20 transition-colors">
@@ -85,7 +85,7 @@ const AnalysisResult = ({ result, file, onReset }) => {
           </div>
 
           {/* Missing Keywords Section */}
-          <div className="bg-dark-bg/40 border border-gray-700/50 rounded-2xl p-6">
+          <div className="bg-dark-bg/40 border border-gray-700/50 rounded-2xl p-6 shadow-lg">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="w-5 h-5 text-yellow-500" />
               <h3 className="text-lg font-semibold text-gray-200">Missing Keywords</h3>
@@ -121,12 +121,12 @@ const AnalysisResult = ({ result, file, onReset }) => {
               </div>
             </div>
 
-            <div className="flex-1 bg-[#0f141a] rounded-xl border border-gray-800 overflow-hidden relative group shadow-inner">
+            <div className="flex-1 bg-[#0f141a] rounded-xl border border-gray-800 overflow-hidden relative group shadow-inner min-h-[400px]">
               {isPDF && previewUrl ? (
-                <embed
+                <iframe
                   src={previewUrl}
-                  type="application/pdf"
-                  className="w-full h-full"
+                  title="Resume Preview"
+                  className="w-full h-full border-none"
                 />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center p-8 text-center animate-in fade-in duration-700">
@@ -138,7 +138,7 @@ const AnalysisResult = ({ result, file, onReset }) => {
                       {file?.name}
                     </p>
                     <p className="text-xs text-gray-500 max-w-[220px] mx-auto leading-relaxed">
-                      Instant preview is currently optimized for <span className="text-primary/80 font-semibold">PDFs</span>. 
+                      Instant preview is optimized for <span className="text-primary/80 font-semibold">PDFs</span>. 
                       You can still download or edit your file below.
                     </p>
                   </div>
@@ -147,10 +147,14 @@ const AnalysisResult = ({ result, file, onReset }) => {
               
               {/* Global Overlay for Download */}
               <div className="absolute inset-0 bg-dark-bg/60 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-3 backdrop-blur-[2px]">
-                 <button className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-xs font-bold rounded-full shadow-2xl hover:scale-105 transition-transform">
+                 <a 
+                   href={previewUrl || "#"} 
+                   download={file?.name}
+                   className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white text-xs font-bold rounded-full shadow-2xl hover:scale-105 transition-transform cursor-pointer"
+                 >
                     <Download className="w-4 h-4" />
                     Download File
-                 </button>
+                 </a>
               </div>
             </div>
             
