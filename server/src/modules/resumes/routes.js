@@ -9,7 +9,7 @@ import {
 const router = express.Router();
 
 router.post("/upload", uploadResumeMiddleware, uploadResume);
-router.post("/analyze", analyzeResume);
+router.post("/analyze", uploadResumeMiddleware, analyzeResume);
 router.get("/result/:id", getResumeResult);
 
 export default router;
