@@ -1,0 +1,141 @@
+import fs from "fs/promises";
+import path from "path";
+import { PDFParse } from "pdf-parse";
+
+const skillKeywords = [
+  "JavaScript",
+  "TypeScript",
+  "React",
+  "Node.js",
+  "MongoDB",
+  "Express",
+  "Python",
+  "Java",
+  "C++",
+  "MySQL",
+  "PostgreSQL",
+  "HTML",
+  "CSS",
+  "Bootstrap",
+  "Tailwind",
+  "Git",
+  "GitHub",
+  "Docker",
+  "AWS",
+  "REST API",
+];
+
+const sectionHeaders = {
+  education: ["education", "academics", "qualification"],
+  experience: ["experience", "work experience", "employment", "internship"],
+  projects: ["projects", "project experience"],
+  certifications: ["certifications", "certificates", "achievements", "licenses"],
+};
+
+const emailRegex = /\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g;
+const phoneRegex = /(?:\+?\d{1,3}[\s-]?)?(?:\(?\d{3,5}\)?[\s-]?)?\d{6,10}\b/g;
+const linkedinRegex = /(https?:\/\/)?(www\.)?linkedin\.com\/[^\s)]+/gi;
+const githubRegex = /(https?:\/\/)?(www\.)?github\.com\/[^\s)]+/gi;
+const portfolioRegex = /(https?:\/\/)?(www\.)?(?!linkedin\.com|github\.com)[a-z0-9-]+(\.[a-z0-9-]+)+\/?[^\s)]*/gi;
+
+const normalizeWhitespace = (text) => text.replace(/\r/g, "\n").replace(/\n{2,}/g, "\n").trim();
+
+const normalizeUrl = (url) => {
+  if (!url) return null;
+  return url.startsWith("http://") || url.startsWith("https://") ? url : `https://${url}`;
+};
+
+const toUniqueList = (items) => [...new Set(items.filter(Boolean).map((item) => item.trim()))];
+
+const extractSectionLines = (lines, headerKeys) => {
+  const startIndex = lines.findIndex((line) => {
+    const normalized = line.trim().toLowerCase();
+    return headerKeys.some((key) => normalized === key || normalized.startsWith(`${key}:`));
+  });
+
+  if (startIndex === -1) return [];
+
+  const collected = [];
+  for (let i = startIndex + 1; i < lines.length; i += 1) {
+    const current = lines[i].trim();
+    if (!current) continue;
+
+    const isAnotherHeader = Object.values(sectionHeaders)
+      .flat()
+      .some((header) => current.toLowerCase() === header || current.toLowerCase().startsWith(`${header}:`));
+
+    if (isAnotherHeader) break;
+    collected.push(current.replace(/^[-*]\s*/, ""));
+    if (collected.length >= 6) break;
+  }
+
+  return toUniqueList(collected);
+};
+
+const extractName = (lines) => {
+  for (const rawLine of lines.slice(0, 8)) {
+    const line = rawLine.trim();
+    if (!line) continue;
+    if (line.includes("@")) continue;
+    if (/linkedin|github|portfolio|resume|curriculum vitae/i.test(line)) continue;
+    if (/[^a-zA-Z.\s-]/.test(line)) continue;
+    if (line.split(/\s+/).length < 2) continue;
+    return line;
+  }
+  return "Unknown";
+};
+
+const extractSkills = (text) => {
+  const lowerText = text.toLowerCase();
+  return skillKeywords.filter((skill) => lowerText.includes(skill.toLowerCase()));
+};
+
+export const parseResume = async (filePath) => {
+  const extension = path.extname(filePath).toLowerCase();
+  if (extension !== ".pdf") {
+    throw new Error("Only PDF parsing is supported on /analyze right now");
+  }
+
+  const fileBuffer = await fs.readFile(filePath);
+  const parser = new PDFParse({ data: fileBuffer });
+  let parsed;
+  try {
+    parsed = await parser.getText();
+  } finally {
+    await parser.destroy();
+  }
+  const text = normalizeWhitespace(parsed.text || "");
+
+  if (!text) {
+    throw new Error("Unable to extract text from resume");
+  }
+
+  const lines = text
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const emails = toUniqueList(text.match(emailRegex) || []);
+  const phones = toUniqueList((text.match(phoneRegex) || []).map((phone) => phone.replace(/\s+/g, " ").trim()));
+  const linkedins = toUniqueList((text.match(linkedinRegex) || []).map(normalizeUrl));
+  const githubs = toUniqueList((text.match(githubRegex) || []).map(normalizeUrl));
+  const portfolios = toUniqueList((text.match(portfolioRegex) || []).map(normalizeUrl)).filter(
+    (url) => !/linkedin\.com|github\.com/i.test(url)
+  );
+
+  return {
+    name: extractName(lines),
+    email: emails[0] || null,
+    phone: phones[0] || null,
+    skills: extractSkills(text),
+    education: extractSectionLines(lines, sectionHeaders.education),
+    experience: extractSectionLines(lines, sectionHeaders.experience),
+    projects: extractSectionLines(lines, sectionHeaders.projects),
+    certifications: extractSectionLines(lines, sectionHeaders.certifications),
+    linkedin: linkedins[0] || null,
+    github: githubs[0] || null,
+    portfolio: portfolios[0] || null,
+    keywords: extractSkills(text),
+    extractedTextLength: text.length,
+  };
+};
