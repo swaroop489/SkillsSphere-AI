@@ -74,7 +74,7 @@ const Register = () => {
 
   return (
     <div className="register-page">
-      <div className="container">
+      <div className="register-content">
         {/* Background glow */}
         <div className="circle blue"></div>
         <div className="circle purple"></div>
