@@ -81,7 +81,6 @@ SkillSphere AI aims to simplify the path from learning to hiring by giving users
 
 The following structure keeps the project modular and easy to scale for new contributors:
 
-
 ```text
 SkillSphere-AI/
 ├── client/                          # React frontend application
@@ -136,7 +135,7 @@ SkillSphere-AI/
 │       │   └── parseResume.js       # PDF parsing and candidate data extraction
 │       └── app/                     # App bootstrap, routes, and server entry
 │
-├── ai-ml/    
+├── ai-ml/
 │   ├── evaluators/                  # AI/ML evaluation logic for resumes, matching, interviews
 │   ├       └── skillEvaluator.js    # Resume vs job skill comparison logic                    
 │   ├── resume-analysis/             # Resume scoring and feedback pipelines
@@ -165,6 +164,7 @@ SkillSphere-AI/
 ### Resume Analyzer Backend Progress
 
 Implemented:
+
 - Resume upload support using multer
 - Resume parsing using pdf-parse
 - Candidate information extraction from uploaded resumes
@@ -172,8 +172,10 @@ Implemented:
 - Weighted skill score generation
 - Detection of matched skills, missing skills, and extra skills
 - Explainable feedback for resume vs JD matching
+- MongoDB persistence for parsed resume data and skill match results
+- Resume schema for storing uploaded file metadata and parsed candidate information
+- GET /api/resume/result/:id endpoint to fetch stored resume records
 ```
-
 
 ## For Open-Source Contributors
 
@@ -235,7 +237,6 @@ Example local development values:
 - `JWT_SECRET=skillsphere_dev_jwt_secret_1234567890abcdef`
 - `JWT_EXPIRES_IN=7d`
 
-
 ```
 
 
@@ -243,3 +244,4 @@ Example local development values:
 
 
 
+```
