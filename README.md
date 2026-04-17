@@ -136,7 +136,9 @@ SkillSphere-AI/
 │       │   └── parseResume.js       # PDF parsing and candidate data extraction
 │       └── app/                     # App bootstrap, routes, and server entry
 │
-├── ai-ml/                           # AI/ML workflows and model-related logic
+├── ai-ml/    
+│   ├── evaluators/                  # AI/ML evaluation logic for resumes, matching, interviews
+│   ├       └── skillEvaluator.js    # Resume vs job skill comparison logic                    
 │   ├── resume-analysis/             # Resume scoring and feedback pipelines
 │   ├── jd-matching/                 # Similarity/matching workflows
 │   ├── interview-feedback/          # Interview evaluation logic
@@ -158,6 +160,20 @@ SkillSphere-AI/
 - **Future-ready:** Supports adding new learning/career modules without major rewrites
 
 ---
+
+```md
+### Resume Analyzer Backend Progress
+
+Implemented:
+- Resume upload support using multer
+- Resume parsing using pdf-parse
+- Candidate information extraction from uploaded resumes
+- Skill comparison between resume skills and job description skills
+- Weighted skill score generation
+- Detection of matched skills, missing skills, and extra skills
+- Explainable feedback for resume vs JD matching
+```
+
 
 ## For Open-Source Contributors
 
@@ -188,28 +204,6 @@ Automated checks run on pull requests to `main` through:
 - `.github/workflows/pr-quality-checks.yml`
 
 These checks validate docs/workflows and, once app code is added, automatically run lint/test/build for `client`, `server`, and `ai-ml` when their dependency manifests exist.
-
-
-## Available Endpoints
-
-Base backend URL:
-
-- `http://localhost:5000`
-
-Health:
-
-- `GET /health`
-
-Authentication:
-
-- `POST /api/auth/register`
-
-Resume APIs:
-
-- `POST /api/resume/upload`
-- `POST /api/resume/analyze`
-- `GET /api/resume/result/:id`
-
 
 ## 🚀 Running the Project
 
