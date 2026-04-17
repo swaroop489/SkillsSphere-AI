@@ -3,6 +3,8 @@ import DragDropUpload from "../components/DragDropUpload";
 import AnalysisResult from "../components/AnalysisResult";
 import { analyzeResume } from "../services/resumeService";
 import { Loader2 } from "lucide-react";
+import Navbar from "../../../shared/landing_components/Navbar";
+import Button from "../../../shared/landing_components/Button";
 
 const ResumeAnalyzerPage = () => {
   const [loading, setLoading] = useState(false);
@@ -32,41 +34,39 @@ const ResumeAnalyzerPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#0d1117] text-gray-100 py-12 px-4 sm:px-6 lg:px-8 font-sans">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen bg-dark-bg text-text-main font-sans">
+      <Navbar />
+      <div className="max-w-4xl mx-auto pt-32 pb-12 px-4 sm:px-6 lg:px-8 space-y-8 animate-slide-up">
         {/* Page Header */}
-        <div className="text-center space-y-3">
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-primary to-blue-400 bg-clip-text text-transparent">
-            Resume Analyzer
+        <div className="text-center space-y-4">
+          <h1 className="text-4xl md:text-6xl font-heading font-bold tracking-tight">
+            <span className="text-gradient">Resume</span> Analyzer
           </h1>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Upload your resume and get instant insights to improve your chances of landing your dream job.
+          <p className="text-text-muted text-lg max-w-2xl mx-auto">
+            Upload your resume and get instant AI-powered insights to optimize your professional profile for top recruiters.
           </p>
         </div>
 
         {/* Main Content Area */}
-        <div className="mt-12 bg-dark-bg/30 border border-gray-800 rounded-3xl p-8 backdrop-blur-sm shadow-2xl relative overflow-hidden">
+        <div className="mt-12 bg-surface border border-border rounded-[2rem] p-8 md:p-12 shadow-2xl relative overflow-hidden">
           {/* Background Decorative Element */}
-          <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[100px] pointer-events-none"></div>
+          <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/5 rounded-full blur-[100px] pointer-events-none"></div>
           
           <div className="relative z-10">
             {loading ? (
               <div className="flex flex-col items-center justify-center py-20 animate-pulse">
-                <Loader2 className="w-12 h-12 text-primary animate-spin mb-4" />
-                <p className="text-xl font-medium text-gray-300">Analyzing your resume...</p>
-                <p className="text-sm text-gray-500 mt-2 italic">Scanning for keywords and improvements</p>
+                <Loader2 className="w-16 h-16 text-primary animate-spin mb-6" />
+                <p className="text-2xl font-heading font-medium text-text-main">Analyzing your resume...</p>
+                <p className="text-text-muted mt-2 italic">Scanning for skills, impact, and ATS optimization</p>
               </div>
             ) : error ? (
               <div className="text-center py-12">
-                <div className="bg-red-500/10 text-red-400 p-4 rounded-xl border border-red-500/20 mb-6">
+                <div className="bg-red-500/10 text-red-400 p-6 rounded-2xl border border-red-500/20 mb-8 max-w-md mx-auto">
                   {error}
                 </div>
-                <button
-                  onClick={resetAnalyzer}
-                  className="px-6 py-2 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors"
-                >
+                <Button variant="primary" size="lg" onClick={resetAnalyzer}>
                   Try Again
-                </button>
+                </Button>
               </div>
             ) : result ? (
               <AnalysisResult 
@@ -87,9 +87,9 @@ const ResumeAnalyzerPage = () => {
             { title: "Smart Suggestions", desc: "Actionable tips to improve your resume impact." },
             { title: "Keyword Gap", desc: "Identify missing industry-standard technology tags." }
           ].map((item, id) => (
-            <div key={id} className="p-5 bg-dark-bg/20 border border-gray-800/80 rounded-2xl hover:border-gray-700 transition-all">
-              <h4 className="font-bold text-gray-200 mb-1">{item.title}</h4>
-              <p className="text-xs text-gray-500 leading-relaxed">{item.desc}</p>
+            <div key={id} className="p-6 bg-surface border border-border rounded-2xl hover:border-primary/30 transition-all group">
+              <h4 className="font-heading font-bold text-text-main mb-2 group-hover:text-primary transition-colors">{item.title}</h4>
+              <p className="text-sm text-text-muted leading-relaxed">{item.desc}</p>
             </div>
           ))}
         </div>

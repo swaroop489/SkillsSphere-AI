@@ -1,17 +1,21 @@
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import ComponentDemo from "../modules/auth/components/ComponentDemo";
+import { Routes, Route } from "react-router-dom";
+import LandingPage from "../modules/landing/LandingPage";
 import ResumeAnalyzerPage from "../modules/resume-analyzer/pages/ResumeAnalyzerPage";
-import Home from "./Home";
+import ComponentDemo from "../modules/auth/components/ComponentDemo";
 
-const App = () => (
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Home />} />
-      <Route path="/demo" element={<ComponentDemo />} />
-      <Route path="/resume-analyzer" element={<ResumeAnalyzerPage />} />
-    </Routes>
-  </BrowserRouter>
-);
+function App() {
+  return (
+    <div className="app-container">
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/demo" element={<ComponentDemo />} />
+        <Route path="/resume-analyzer" element={<ResumeAnalyzerPage />} />
+        <Route path="/login" element={<div className="flex-center" style={{ height: '100vh', fontSize: '2rem'}}>Login Route Spacer</div>} />
+        <Route path="/register" element={<div className="flex-center" style={{ height: '100vh', fontSize: '2rem'}}>Register Route Spacer</div>} />
+      </Routes>
+    </div>
+  );
+}
 
 export default App;
