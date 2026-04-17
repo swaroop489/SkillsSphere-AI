@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Eye, EyeOff } from "lucide-react";
 import "./register.css";
 
 const Register = () => {
@@ -12,6 +13,9 @@ const Register = () => {
     confirmPassword: "",
     role: "student",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const [errors, setErrors] = useState({});
 
@@ -105,28 +109,42 @@ const Register = () => {
           {errors.email && <p className="error">{errors.email}</p>}
 
           {/* Password */}
-          <div className="inputBox">
+          <div className="inputBox password-box">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               placeholder=" "
               value={form.password}
               onChange={handleChange}
             />
             <label>Password</label>
+            <button
+              type="button"
+              className="eye-icon"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
           </div>
           {errors.password && <p className="error">{errors.password}</p>}
 
           {/* Confirm Password */}
-          <div className="inputBox">
+          <div className="inputBox password-box">
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               id="confirmPassword"
               placeholder=" "
               value={form.confirmPassword}
               onChange={handleChange}
             />
             <label>Confirm Password</label>
+            <button
+              type="button"
+              className="eye-icon"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+            >
+              {showConfirmPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
           </div>
           {errors.confirmPassword && (
             <p className="error">{errors.confirmPassword}</p>
