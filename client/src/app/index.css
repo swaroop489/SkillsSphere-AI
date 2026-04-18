@@ -101,6 +101,7 @@ a {
 .autofill-fix:-webkit-autofill:active {
   -webkit-box-shadow: 0 0 0 1000px var(--autofill-bg, #1e293b) inset !important;
   -webkit-text-fill-color: var(--autofill-color, white) !important;
+  caret-color: var(--autofill-color, white) !important;
   transition: background-color 5000s ease-in-out 0s;
 }
 

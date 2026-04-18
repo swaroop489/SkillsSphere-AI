@@ -44,10 +44,10 @@ const Input = ({
   const inputType = isPassword ? (showPassword ? "text" : "password") : type;
 
   const baseInput = [
-    "w-full rounded-lg border bg-slate-800 px-3.5 py-2.5 text-sm text-white",
+    "w-full rounded-lg border bg-slate-800 px-3.5 py-2.5 text-sm text-white caret-white",
     "placeholder:text-gray-500 transition-all duration-150",
     "focus:outline-none focus:ring-2 focus:ring-offset-0",
-    "autofill-fix", 
+    "autofill-fix",
     leftIcon ? "pl-10" : "",
     (rightIcon || isPassword) ? "pr-10" : "",
     hasError
