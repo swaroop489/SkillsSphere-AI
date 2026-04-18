@@ -1,14 +1,13 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../database/models/User.js";
+import AppError from "../../utils/AppError.js";
 
 const SALT_ROUNDS = 12;
 
 const buildAuthToken = (user) => {
   if (!process.env.JWT_SECRET) {
-    const error = new Error("Missing JWT_SECRET in environment variables");
-    error.code = "MISSING_JWT_SECRET";
-    throw error;
+    throw new AppError("Missing JWT_SECRET in environment variables", 500);
   }
 
   return jwt.sign(
@@ -27,9 +26,7 @@ export const registerUserAndIssueToken = async ({ name, email, password, role })
   const existingUser = await User.findOne({ email });
 
   if (existingUser) {
-    const error = new Error("User already exists with this email");
-    error.code = "USER_ALREADY_EXISTS";
-    throw error;
+    throw new AppError("User already exists with this email", 409);
   }
 
   const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
