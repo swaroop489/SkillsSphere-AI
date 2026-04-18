@@ -141,7 +141,8 @@ SkillSphere-AI/
 │
 ├── ai-ml/
 │   ├── evaluators/                  # AI/ML evaluation logic for resumes, matching, interviews
-│   ├       └── skillEvaluator.js    # Resume vs job skill comparison logic                    
+│   │   ├── skillEvaluator.js        # Resume vs job skill comparison logic
+│   │   └── keywordEvaluator.js      # JD keyword relevance vs resume text
 │   ├── resume-analysis/             # Resume scoring and feedback pipelines
 │   ├── jd-matching/                 # Similarity/matching workflows
 │   ├── interview-feedback/          # Interview evaluation logic
@@ -188,6 +189,9 @@ Implemented:
 - MongoDB persistence for parsed resume data and skill match results
 - Resume schema for storing uploaded file metadata and parsed candidate information
 - GET /api/resume/result/:id endpoint to fetch stored resume records
+- Reusable `ai-ml/evaluators/keywordEvaluator.js` for resume vs job description text
+- Keyword relevance analysis with matched keywords, missing keywords, and weighted keyword score (`weight` default `0.2`)
+- Optional `jobDescription` form field on `POST /api/resume/analyze` to run keyword evaluation alongside parsing
 ```
 
 ## For Open-Source Contributors
