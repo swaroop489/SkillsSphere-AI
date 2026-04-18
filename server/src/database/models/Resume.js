@@ -73,6 +73,17 @@ const resumeSchema = new mongoose.Schema(
       missingSkills: [String],
       extraSkills: [String],
     },
+    jobDescription: {
+      type: String,
+      default: null,
+    },
+    keywordMatch: {
+      score: Number,
+      weight: Number,
+      feedback: [String],
+      matchedKeywords: [String],
+      missingKeywords: [String],
+    },
   },
   {
     timestamps: true,

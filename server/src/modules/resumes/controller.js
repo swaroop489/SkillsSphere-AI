@@ -1,6 +1,7 @@
 import path from "path";
 import { parseResume } from "../../utils/parseResume.js";
 import { skillEvaluator } from "../../../../ai-ml/evaluators/skillEvaluator.js";
+import { keywordEvaluator } from "../../../../ai-ml/evaluators/keywordEvaluator.js";
 import Resume from "../../database/models/Resume.js";
 
 const parseSkillArrayString = (input) => {
@@ -95,7 +96,18 @@ export const analyzeResume = async (req, res) => {
         })
       : null;
 
+    const jobDescription =
+      typeof req.body?.jobDescription === "string" ? req.body.jobDescription : "";
+    const trimmedJobDescription = jobDescription.trim();
+    const keywordMatch = trimmedJobDescription && parsedData.resumeText
+      ? keywordEvaluator({
+          resumeText: parsedData.resumeText,
+          jobDescription: trimmedJobDescription,
+        })
+      : null;
+
     const finalSkillMatch = skillMatch || {};
+    const finalKeywordMatch = keywordMatch || {};
     const fileData = {
       originalName: req.file.originalname,
       storedName: req.file.filename,
@@ -105,23 +117,36 @@ export const analyzeResume = async (req, res) => {
     };
 
     try {
+      const { resumeText, ...resumeFields } = parsedData;
+
       const savedResume = await Resume.create({
-        ...parsedData,
+        ...resumeFields,
         jobSkills,
+        jobDescription: trimmedJobDescription || null,
         skillMatch: finalSkillMatch,
+        keywordMatch: finalKeywordMatch,
         file: fileData,
       });
+
+      const hasSkillEval = Object.keys(finalSkillMatch).length > 0;
+      const hasKeywordEval = Object.keys(finalKeywordMatch).length > 0;
+      const successParts = [];
+      if (hasSkillEval) successParts.push("skill match");
+      if (hasKeywordEval) successParts.push("keyword relevance");
+      const evalSummary =
+        successParts.length > 0
+          ? `Resume parsed, ${successParts.join(" and ")} evaluated, and saved successfully`
+          : "Resume parsed and saved successfully";
 
       return res.status(200).json({
         success: true,
         message: invalidJson
           ? "Resume parsed and saved, but jobSkills JSON format is invalid"
-          : Object.keys(finalSkillMatch).length > 0
-            ? "Resume parsed, skill match evaluated, and saved successfully"
-            : "Resume parsed and saved successfully",
+          : evalSummary,
         resumeId: savedResume._id,
-        data: parsedData,
+        data: resumeFields,
         skillMatch: finalSkillMatch,
+        keywordMatch: finalKeywordMatch,
         file: fileData,
       });
     } catch (saveError) {
