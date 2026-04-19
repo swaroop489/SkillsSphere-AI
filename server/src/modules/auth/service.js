@@ -87,7 +87,7 @@ export const forgotPasswordRequest = async (email) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return { success: true, message: "If an account exists, a reset code has been sent." };
+    throw new AppError("No account found with this email address", 404);
   }
 
   const otp = generateOTP();
@@ -100,7 +100,7 @@ export const forgotPasswordRequest = async (email) => {
 
   await sendOTP(email, otp, "reset");
 
-  return { success: true, message: "If an account exists, a reset code has been sent." };
+  return { success: true, message: "A reset code has been sent to your email." };
 };
 
 export const resetUserPassword = async (email, otp, newPassword) => {
@@ -138,7 +138,7 @@ export const resendUserOTP = async (email) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    return { success: true, message: "If an account exists, a new code has been sent." };
+    throw new AppError("No account found with this email address", 404);
   }
 
   if (user.isVerified) {
@@ -155,5 +155,5 @@ export const resendUserOTP = async (email) => {
 
   await sendOTP(email, otp, "verification");
 
-  return { success: true, message: "If an account exists, a new code has been sent." };
+  return { success: true, message: "A new verification code has been sent to your email." };
 };
