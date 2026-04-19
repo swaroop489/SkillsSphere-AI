@@ -1,5 +1,17 @@
-import { validateRegisterInput } from "../../validations/authValidation.js";
-import { registerUserAndIssueToken } from "./service.js";
+import { 
+  validateRegisterInput, 
+  validateVerifyEmailInput, 
+  validateForgotPasswordInput, 
+  validateResetPasswordInput,
+  validateResendOTPInput 
+} from "../../validations/authValidation.js";
+import { 
+  registerUserAndIssueToken, 
+  verifyUserEmail, 
+  forgotPasswordRequest, 
+  resetUserPassword,
+  resendUserOTP 
+} from "./service.js";
 
 export const register = async (req, res) => {
   const validation = validateRegisterInput(req.body);
@@ -17,7 +29,7 @@ export const register = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "User registered successfully",
+      message: "User registered successfully. Please check your email for verification code.",
       token: authResult.token,
       user: authResult.user
     });
@@ -29,16 +41,97 @@ export const register = async (req, res) => {
       });
     }
 
-    if (error.code === "MISSING_JWT_SECRET") {
-      return res.status(500).json({
-        success: false,
-        message: "Server configuration error: JWT secret is missing"
-      });
-    }
-
     return res.status(500).json({
       success: false,
-      message: "Unable to register user right now"
+      message: error.message || "Unable to register user right now"
+    });
+  }
+};
+
+export const verifyEmail = async (req, res) => {
+  const validation = validateVerifyEmailInput(req.body);
+
+  if (!validation.isValid) {
+    return res.status(400).json({
+      success: false,
+      errors: validation.errors
+    });
+  }
+
+  try {
+    const result = await verifyUserEmail(validation.data.email, validation.data.otp);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const forgotPassword = async (req, res) => {
+  const validation = validateForgotPasswordInput(req.body);
+
+  if (!validation.isValid) {
+    return res.status(400).json({
+      success: false,
+      errors: validation.errors
+    });
+  }
+
+  try {
+    const result = await forgotPasswordRequest(validation.data.email);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  const validation = validateResetPasswordInput(req.body);
+
+  if (!validation.isValid) {
+    return res.status(400).json({
+      success: false,
+      errors: validation.errors
+    });
+  }
+
+  try {
+    const result = await resetUserPassword(
+      validation.data.email, 
+      validation.data.otp, 
+      validation.data.newPassword
+    );
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
+    });
+  }
+};
+
+export const resendOTP = async (req, res) => {
+  const validation = validateResendOTPInput(req.body);
+
+  if (!validation.isValid) {
+    return res.status(400).json({
+      success: false,
+      errors: validation.errors
+    });
+  }
+
+  try {
+    const result = await resendUserOTP(validation.data.email);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      message: error.message
     });
   }
 };
